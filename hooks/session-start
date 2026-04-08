@@ -11,9 +11,9 @@ fi
 
 # Build context message
 if [ "$HAS_ROADMAP" = "true" ]; then
-  MSG="This project has an active roadmap at .claude/roadmap/. Available workflow skills: /setup-roadmap, /build-roadmap, /update-roadmap, /work-task, /status. Use /work-task to pick up or continue development, or /status for a quick overview."
+  MSG="This project has an active roadmap at .claude/roadmap/. Available workflow skills: /adopt-project, /setup-roadmap, /build-roadmap, /update-roadmap, /work-task, /status. Use /work-task to pick up or continue development, or /status for a quick overview."
 else
-  MSG="No roadmap detected. Use /setup-roadmap to initialize workflow tracking, or /build-roadmap after brainstorming."
+  MSG="No roadmap detected. Use /adopt-project to onboard an existing project, or /setup-roadmap to start fresh."
 fi
 
 # Output as JSON for Claude context injection

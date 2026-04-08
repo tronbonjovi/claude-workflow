@@ -1,6 +1,6 @@
 {
   "name": "claude-workflow",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "type": "module",
   "description": "File-based development workflow system for Claude Code — roadmaps, milestones, and task contracts",
   "author": "tronbonjovi",
@@ -19,6 +19,11 @@
       "name": "build-roadmap",
       "path": "skills/build-roadmap/SKILL.md",
       "description": "Use when you have brainstorm drafts or informal plans and want to formalize them into a structured roadmap with milestones and AI-executable task contracts"
+    },
+    {
+      "name": "adopt-project",
+      "path": "skills/adopt-project/SKILL.md",
+      "description": "Use when bringing an existing, in-progress project into the claude-workflow system — scans the repo, identifies planning artifacts, then bootstraps the workflow structure"
     },
     {
       "name": "setup-roadmap",

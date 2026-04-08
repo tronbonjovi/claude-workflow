@@ -6,7 +6,8 @@ A file-based development workflow plugin for Claude Code. Turns brainstorming se
 
 | Skill | Purpose |
 |-------|---------|
-| **setup-roadmap** | Initialize the workflow structure for a project |
+| **adopt-project** | Onboard an existing project: scan repo, find planning artifacts, bootstrap workflow |
+| **setup-roadmap** | Initialize the workflow structure for a new project |
 | **build-roadmap** | Transform brainstorm drafts into a formal roadmap with milestones and task contracts |
 | **update-roadmap** | Add/remove/modify milestones and tasks after direction changes |
 | **work-task** | Orchestrator: reads the task graph, presents status, dispatches subagents on your approval |
@@ -83,8 +84,8 @@ claude plugin install claude-workflow
 
 ## Workflow
 
-1. **Brainstorm freely** — save rough plans to `roadmap/drafts/`
-2. **`/build-roadmap`** — formalize into structured roadmap with task contracts
+1. **`/adopt-project`** — onboard an existing project (or brainstorm freely for new ones)
+2. **`/build-roadmap`** — formalize drafts into structured roadmap with task contracts
 3. **`/work-task`** — see status and dispatch subagents for task execution
 4. **`/status`** — quick read-only progress check
 5. **`/update-roadmap`** — adjust after new brainstorming or direction changes
