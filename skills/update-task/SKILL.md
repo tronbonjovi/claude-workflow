@@ -31,7 +31,41 @@ When a task status changes, update ALL of these files in order:
   - If `status_override` is set (not null): keep the override, but note the derived status changed
 - Update the milestone's status field
 
-### 4. ROADMAP.md
+### 4. Archive check (only on terminal milestone status)
+
+**This step only runs when the milestone's derived or overridden status is `completed` or `cancelled`.** Skip entirely for any other status (`pending`, `in_progress`, `blocked`, `review`).
+
+When a milestone reaches terminal status:
+
+#### 4a. Ensure ARCHIVE.md exists
+- If `.claude/roadmap/ARCHIVE.md` does not exist, create it with:
+  ```
+  # Archived Milestones
+
+  > Updated: <today's date>
+  ```
+
+#### 4b. Move milestone section from MILESTONE.md to ARCHIVE.md
+- Copy the milestone's full section (heading + all bullet points) from MILESTONE.md
+- Append it to ARCHIVE.md under a `## Archived` heading (create this heading if it doesn't exist)
+- Remove the milestone section from MILESTONE.md (from its `###` heading through the last bullet before the next `###` or end of section)
+- The milestone should be removed from whichever group it was in (`## Active Milestones` or `## Completed Milestones`)
+
+#### 4c. Move task rows from TASK.md to ARCHIVE.md
+- Find all task rows belonging to this milestone in TASK.md (match on the Milestone column)
+- Identify which Phase section they belong to (e.g., `## Phase 1: Archive Foundation`)
+- In ARCHIVE.md, create a phase heading if it doesn't exist, then append the task rows under it with the same table header
+- Remove the task rows from TASK.md
+- If removing all rows from a phase section in TASK.md leaves it with only the table header and no data rows, remove the entire phase section
+
+#### 4d. Update ARCHIVE.md date
+- Update the `> Updated:` date line in ARCHIVE.md to today's date
+
+#### What is NOT archived
+- The milestone row in ROADMAP.md stays — it serves as a table of contents
+- The milestone directory and individual task files on disk are NOT moved or deleted
+
+### 5. ROADMAP.md
 - Find the milestone row in the overview table
 - Update Status column to match milestone's current status
 - Update Progress column (count completed+cancelled / total tasks)
