@@ -130,7 +130,7 @@ If no tasks are blocked, omit this section entirely.
 
 ### Next Up
 
-List tasks that are `pending` (or `ready`) with all dependencies met — these are available to work on right now.
+List tasks that are `pending` with all dependencies met — these are available to work on right now.
 
 ```
 Ready to Work

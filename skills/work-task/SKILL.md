@@ -5,8 +5,6 @@ description: Use when the user wants to work on tasks, check project status, or 
 
 # Work Task
 
-The primary execution interface. Reads the task graph, presents current state, recommends next work, and dispatches subagents on user approval.
-
 **Co-pilot, not autopilot.** Present options and wait for the user to decide. Never auto-dispatch work.
 
 ## When to Use
@@ -91,16 +89,7 @@ For each approved task file:
 
 4. **If all fields are present and substantive:** proceed to Step 5 (Dispatch).
 
-5. **If any field is missing or placeholder:** present the gaps to the user:
-   > "`<task-id>` has incomplete contract fields:
-   > - ❌ Missing: <list of missing/empty fields>
-   >
-   > Options:
-   > 1. **Proceed anyway** — dispatch with gaps (subagent may struggle)
-   > 2. **Fill in the gaps now** — we'll complete the contract before dispatch
-   > 3. **Skip this task** — move on to the next option"
-
-   Wait for the user to choose before continuing. If the user chooses to fill gaps, update the contract file, then re-validate.
+5. **If any field is missing or placeholder:** tell the user which fields are missing and offer: proceed anyway, fill gaps now, or skip the task. Wait for their choice.
 
 ## Step 5: Dispatch Subagents
 
@@ -111,30 +100,12 @@ For each approved task:
 - Read the full task contract file
 
 ### 5b. Dispatch
-- **Generate Prior Work Brief** before composing the subagent prompt.
-  The subagent needs recent context and established patterns, not full milestone history.
-  1. List all task files in the same milestone directory as the current task
-  2. Identify task files that have `status: completed` in their frontmatter
-  3. Sort completed tasks by `updated` date in frontmatter (most recent first)
-  4. Read only the first 3 completed tasks (if fewer than 3 are completed, read all of them)
-  5. From each completed task, extract:
-     - **Title** (from frontmatter or heading)
-     - **Objective** (the task's stated goal)
-     - **Files touched** (from `filesTouch` frontmatter)
-     - **What was implemented** (from the contract's Instructions/Acceptance Criteria — do NOT re-read source files)
-  6. Compose a **"Prior Work Brief"** section using concise bullet points:
+- **Generate Prior Work Brief:** Read up to 3 most-recently-completed task files in the same milestone (by `updated` date). For each, extract title, objective, `filesTouch`, and what was implemented (from contract — do NOT re-read source files). Format as:
      ```
      ## Prior Work Brief
-     - **<task-id>: <title>** — <one-line objective summary>
-       - Built: <what was implemented, 1-2 bullets>
-       - Files: <list of files touched>
-       - Patterns: <any architectural patterns established, if apparent>
+     - **<task-id>: <title>** — <objective>. Files: <list>. Patterns: <if apparent>
      ```
-  7. **First-task edge case:** If no completed tasks exist in the milestone, use:
-     ```
-     ## Prior Work Brief
-     This is the first task in this milestone — no prior work to reference.
-     ```
+  If no completed tasks exist, note "First task in milestone — no prior work."
 
 - Spin up a subagent (using the Agent tool) with:
   - The full task contract content as the primary prompt
@@ -185,20 +156,4 @@ After 2 failed reviews, the task is blocked and escalated to the user. Do not lo
 
 After task(s) complete, return to Step 1 — assess the updated state and present next options. The user drives the pace.
 
-## Subagent Dispatch Rules
-
-| Scenario | Approach |
-|----------|----------|
-| Single task, any complexity | One fresh subagent |
-| Multiple parallel tasks | One subagent per task, dispatched simultaneously |
-| Sequential simple tasks, same area | Batch into one subagent |
-| Task fails or escalates | New subagent for fix (fresh context) |
-
-**Sequential is the default.** Parallel is an optimization recommended when the task graph supports it — not the first instinct.
-
-## Handling Subagent Issues
-
-- **Subagent asks questions:** Answer with context from the codebase. If the question reveals a gap in the task contract, note it for future improvement.
-- **Subagent reports BLOCKED:** Assess whether more context helps, a more capable model is needed, or the task needs to be split. Escalate to user if unclear.
-- **Subagent reports DONE_WITH_CONCERNS:** Read the concerns. If they're about correctness, address before review. If they're observations, note and proceed to review.
-- **Git conflicts (parallel):** If parallel subagents create merge conflicts, resolve them or re-run the conflicting task.
+**Sequential is the default.** Parallel only when the task graph supports it. Escalate to the user if a subagent is blocked, reports concerns, or creates merge conflicts.

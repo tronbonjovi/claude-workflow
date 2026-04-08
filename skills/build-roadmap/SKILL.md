@@ -18,7 +18,7 @@ Transform informal brainstorming outputs into a formal, structured roadmap with 
 
 ## Pre-Check
 
-1. Verify `.claude/roadmap/` exists. If not: "No roadmap structure found. Run `/setup-roadmap` first."
+1. Verify `.claude/roadmap/` exists. If not: "No roadmap found. Run `/setup-roadmap` to get started."
 2. Scan for input sources:
    - `.claude/roadmap/drafts/*.md` — brainstorm drafts
    - `docs/superpowers/specs/*.md` — design specs
@@ -44,7 +44,6 @@ Task files are dispatch payloads for Claude Code subagents. Each contract must c
 - **Files to touch** — explicit list of files to create or modify
 - **Tests** — specific test cases to write (TDD: tests first, then implementation)
 - **Acceptance criteria** — verifiable checklist
-- **Scope boundaries** — what's in and out, to prevent over-building
 
 If a task can't be written this prescriptively, it's either too vague (needs more brainstorming) or too large (needs to be split).
 

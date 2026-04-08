@@ -19,7 +19,7 @@ Modify the roadmap structure after brainstorming revisions, scope changes, new f
 
 ## Pre-Check
 
-1. Verify `.claude/roadmap/` exists with ROADMAP.md, MILESTONE.md, and TASK.md. If not: "No roadmap found. Run `/setup-roadmap` first."
+1. Verify `.claude/roadmap/` exists with ROADMAP.md, MILESTONE.md, and TASK.md. If not: "No roadmap found. Run `/setup-roadmap` to get started."
 2. Read current state: ROADMAP.md, MILESTONE.md, TASK.md, and ARCHIVE.md (if it exists) to understand existing structure.
 3. If new drafts exist in `.claude/roadmap/drafts/` that haven't been referenced in ROADMAP.md `sources:`, mention them: "I see new drafts that aren't part of the current roadmap: <list>. Should I incorporate them?"
 

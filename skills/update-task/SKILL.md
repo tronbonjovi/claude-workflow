@@ -5,7 +5,7 @@ description: Internal plumbing for cascade status updates — not user-invoked. 
 
 # Update Task (Internal)
 
-**This is internal plumbing, not a user-facing skill.** It is called by the `work-task` orchestrator and `update-roadmap` skill to maintain cross-file consistency when task statuses change. If the user asks Claude to change a task's status directly, Claude uses this logic but the user doesn't invoke it as a command.
+Called by work-task and update-roadmap for cross-file consistency when task statuses change.
 
 ## Cascade Update Logic
 
@@ -58,48 +58,12 @@ When a milestone reaches terminal status:
 
 ### ARCHIVE.md Format
 
-The archive file uses this structure:
-
-```markdown
-# Archive
-
-> Updated: YYYY-MM-DD
-
-## Archived Milestones
-
-### <milestone-name>
-- **Status:** completed | cancelled
-- **Description:** <original description>
-- **Tasks:** <original task list>
-<any other bullet points from the original MILESTONE.md section>
-
-### <another-milestone>
-...
-
-## Archived Tasks
-
-### <milestone-name>
-
-| ID | Title | Complexity | Status | Parallel-Safe |
-|----|-------|-----------|--------|---------------|
-| milestone-task001 | Task title | standard | completed | yes |
-| milestone-task002 | Task title | standard | cancelled | yes |
-
-### <another-milestone>
-
-| ID | Title | Complexity | Status | Parallel-Safe |
-|----|-------|-----------|--------|---------------|
-| ...rows... |
-```
+Structure: `# Archive` > `> Updated: YYYY-MM-DD` > `## Archived Milestones` (each as `### <name>` preserving the full MILESTONE.md section) > `## Archived Tasks` (each milestone as `### <name>` with standard task table rows).
 
 Key rules:
-- Each archived milestone preserves its full section as it appeared in MILESTONE.md
-- Task rows are grouped by milestone name under `## Archived Tasks`, not by phase
-- The `> Updated:` date reflects the last time the archive was modified
-
-#### What is NOT archived
-- The milestone row in ROADMAP.md stays — it serves as a table of contents
-- The milestone directory and individual task files on disk are NOT moved or deleted
+- Tasks grouped by milestone name, not by phase
+- ROADMAP.md milestone row stays (table of contents)
+- Milestone directory and task files on disk are NOT moved or deleted
 
 ### 5. ROADMAP.md
 - Find the milestone row in the overview table
