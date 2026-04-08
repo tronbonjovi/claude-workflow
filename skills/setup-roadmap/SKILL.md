@@ -55,6 +55,4 @@ After creating all files, report what was created:
 > - `.claude/roadmap/ROADMAP.md`
 > - `.claude/roadmap/MILESTONE.md`
 > - `.claude/roadmap/TASK.md`
-> - `.claude/roadmap/drafts/` (ready for brainstorm outputs)
->
-> Next step: brainstorm your project plan, save drafts to `roadmap/drafts/`, then run `/build-roadmap`.
+> - `.claude/roadmap/drafts/`
