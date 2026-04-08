@@ -39,20 +39,23 @@ Read in priority order (stop at first match for each field):
 
 ### 1c. Planning Artifacts
 
-Search for files that contain plans, tasks, or design intent — these are candidates for copying to drafts:
+Search for files that contain plans, tasks, or design intent. **Not all artifacts are active work** — in a mid-project adoption, most may already be implemented.
 
+Find these files:
 - `TODO.md`, `TODO.txt`, `TODO` — task lists
 - `ROADMAP.md`, `PLAN.md`, `PLANNING.md` — project plans
-- `docs/**/*.md` — specs, designs, architecture docs. Glob first: if more than 10 matches, scan filenames only and present the list to the user for selection. If 10 or fewer, read first 5 lines of each. Look for files whose names or first lines suggest planning content (words like spec, design, architecture, plan, proposal, RFC, ADR).
+- `CHANGELOG.md` — what's already been done (context, not a draft)
+- `README.md` — project purpose (context, not a draft)
+- `docs/**/*.md` — specs, designs, architecture docs. Glob first: if more than 10 matches, scan filenames only. If 10 or fewer, read first 5 lines of each.
 
-Also note these for context (read for understanding but don't copy to drafts):
-- `CHANGELOG.md` — what's already been done
-- `README.md` — project purpose and setup
-- `CLAUDE.md` — existing Claude instructions
+**Triage each artifact as `completed` or `active`:**
+- Cross-reference against CHANGELOG entries and recent git log — if a feature described in a doc appears in the changelog or commit history as shipped, mark it `completed`
+- Docs with no matching changelog/commit activity, or that describe future/planned work, mark as `active`
+- When in doubt, mark `completed` — it's safer to skip than to re-plan finished work
 
 ## Phase 2: Present
 
-Concise summary. This is a checkpoint — user confirms before any files are created.
+Concise summary with triaged artifacts. This is a checkpoint — user confirms before any files are created.
 
 > **Project: <name>**
 > <description>
@@ -61,13 +64,16 @@ Concise summary. This is a checkpoint — user confirms before any files are cre
 > **State:** <active development / maintenance / early stage — based on git log>
 > **Recent activity:** <summary from git log, plus note of uncommitted work if any>
 >
-> **Planning artifacts found:**
-> - `<file>` — <what it appears to be>
-> - *(none found)* — if no planning files exist
+> **Active (will copy to drafts):**
+> - `<file>` — <what it describes>
+> - *(none found)* — if everything appears completed
 >
-> Ready to set up the workflow? I'll create the roadmap structure and copy planning files into drafts. Your existing files won't be touched.
+> **Completed (reference only, won't copy):**
+> - `<file>` — <what it describes, why it's considered done>
+>
+> Does this split look right? I'll copy only the active artifacts to drafts. Your existing files won't be touched.
 
-Wait for user confirmation.
+Wait for user confirmation. The user may reclassify artifacts — move completed items to active or vice versa. Adjust the copy list accordingly.
 
 ## Phase 3: Bootstrap
 
@@ -80,12 +86,13 @@ Create the roadmap structure directly (this skill handles its own confirmation):
 - Create ROADMAP.md, MILESTONE.md, TASK.md from templates in the plugin's `templates/` directory
 - Replace `{{PROJECT_NAME}}` with discovered name, `{{DATE}}` with today's date
 
-### 3b. Copy Planning Artifacts to Drafts
+### 3b. Copy Active Artifacts to Drafts
 
-For each planning artifact identified in Phase 1c (only the "copy to drafts" candidates):
+For each artifact triaged as `active` (confirmed by user in Phase 2):
 - **Copy** to `.claude/roadmap/drafts/<original-filename>`
 - On name collision, prefix with hyphenated source path: a file at `docs/specs/design.md` becomes `docs-specs-design.md`
 - Never move, rename, or modify the original
+- Do **not** copy artifacts triaged as `completed`
 
 ### 3c. Enrich ROADMAP.md
 
