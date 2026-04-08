@@ -43,7 +43,7 @@
     {
       "name": "status",
       "path": "skills/status/SKILL.md",
-      "description": "Use when the user wants a read-only overview of roadmap progress — prints a formatted terminal summary of milestones, tasks, and blockers"
+      "description": "Use when the user wants to check project status, see roadmap progress, or get an overview of milestones and tasks — reads roadmap files and prints a formatted terminal summary"
     }
   ]
 }
