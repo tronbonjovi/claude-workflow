@@ -9,6 +9,8 @@ phase: {{PHASE}}
 created: {{DATE}}
 updated: {{DATE}}
 complexity: standard
+parallelSafe: {{PARALLEL_SAFE}}
+filesTouch: {{FILES_TO_TOUCH}}
 ---
 
 # {{TASK_TITLE}}
@@ -21,6 +23,14 @@ complexity: standard
 
 {{OBJECTIVE}}
 
+## Instructions
+
+{{INSTRUCTIONS}}
+
+## Tests
+
+{{TESTS}}
+
 ## Acceptance Criteria
 
 {{ACCEPTANCE_CRITERIA}}
@@ -32,7 +42,3 @@ complexity: standard
 
 **Out of scope:**
 {{OUT_OF_SCOPE}}
-
-## Notes
-
-{{NOTES}}

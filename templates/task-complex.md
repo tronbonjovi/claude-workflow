@@ -9,6 +9,8 @@ phase: {{PHASE}}
 created: {{DATE}}
 updated: {{DATE}}
 complexity: complex
+parallelSafe: {{PARALLEL_SAFE}}
+filesTouch: {{FILES_TO_TOUCH}}
 ---
 
 # {{TASK_TITLE}}
@@ -20,6 +22,18 @@ complexity: complex
 ## Objective
 
 {{OBJECTIVE}}
+
+## Technical Approach
+
+{{TECHNICAL_APPROACH}}
+
+## Instructions
+
+{{INSTRUCTIONS}}
+
+## Tests
+
+{{TESTS}}
 
 ## Acceptance Criteria
 
@@ -33,14 +47,6 @@ complexity: complex
 **Out of scope:**
 {{OUT_OF_SCOPE}}
 
-## Technical Approach
+## Risk Notes
 
-{{TECHNICAL_APPROACH}}
-
-## Test Plan
-
-{{TEST_PLAN}}
-
-## Notes
-
-{{NOTES}}
+{{RISK_NOTES}}
