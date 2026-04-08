@@ -58,60 +58,109 @@ The user decides:
 
 **Never dispatch without explicit approval.**
 
-## Step 4: Dispatch Subagents
+## Step 4: Validate Contract
+
+Before dispatching, verify each approved task contract is complete enough for a subagent to execute.
+
+For each approved task file:
+
+1. Read the task contract file
+2. Check for the following required fields:
+   - **`## Instructions` section** — must exist and contain substantive content (not empty or placeholder text)
+   - **`## Tests` section** — must exist and contain substantive content
+   - **`## Acceptance Criteria` section** — must exist and contain substantive content
+   - **`filesTouch` frontmatter field** — must be populated with actual file paths (not an empty array `[]` or placeholder like `TBD`)
+
+3. **If all fields are present and substantive:** proceed to Step 5 (Dispatch).
+
+4. **If any field is missing or placeholder:** present the gaps to the user:
+   > "`<task-id>` has incomplete contract fields:
+   > - ❌ Missing: <list of missing/empty fields>
+   >
+   > Options:
+   > 1. **Proceed anyway** — dispatch with gaps (subagent may struggle)
+   > 2. **Fill in the gaps now** — we'll complete the contract before dispatch
+   > 3. **Skip this task** — move on to the next option"
+
+   Wait for the user to choose before continuing. If the user chooses to fill gaps, update the contract file, then re-validate.
+
+## Step 5: Dispatch Subagents
 
 For each approved task:
 
-### 4a. Pre-dispatch
+### 5a. Pre-dispatch
 - Mark task `in_progress` (cascade update to TASK.md, MILESTONE.md, ROADMAP.md)
 - Read the full task contract file
 
-### 4b. Dispatch
+### 5b. Dispatch
+- **Generate Prior Work Brief** before composing the subagent prompt:
+  1. List all task files in the same milestone directory as the current task
+  2. Read each task file that has `status: completed` in its frontmatter
+  3. From each completed task, extract:
+     - **Title** (from frontmatter or heading)
+     - **Objective** (the task's stated goal)
+     - **Files touched** (from `filesTouch` frontmatter)
+     - **What was implemented** (from the contract's Instructions/Acceptance Criteria — do NOT re-read source files)
+  4. Compose a **"Prior Work Brief"** section using concise bullet points:
+     ```
+     ## Prior Work Brief
+     - **<task-id>: <title>** — <one-line objective summary>
+       - Built: <what was implemented, 1-2 bullets>
+       - Files: <list of files touched>
+       - Patterns: <any architectural patterns established, if apparent>
+     ```
+  5. **First-task edge case:** If no completed tasks exist in the milestone, use:
+     ```
+     ## Prior Work Brief
+     This is the first task in this milestone — no prior work to reference.
+     ```
+
 - Spin up a subagent (using the Agent tool) with:
   - The full task contract content as the primary prompt
-  - Project context: what the project is, relevant architecture, what was built in prior tasks
+  - The **Prior Work Brief** (generated above) so the subagent knows what sibling tasks already built
+  - Project context: what the project is, relevant architecture
   - Working directory
   - Instruction to follow TDD (tests first, then implementation)
   - Instruction to commit work when done
   - Instruction to report: what was implemented, what was tested, files changed, any concerns
 
-### 4c. Parallel dispatch
+### 5c. Parallel dispatch
 - If multiple tasks approved for parallel execution:
   - Verify `parallelSafe: true` on all tasks
   - Verify no overlap in `filesTouch` arrays
   - If overlap detected: warn user, suggest sequential instead
   - If clear: dispatch all subagents in a single message (they run concurrently)
 
-### 4d. Batch dispatch
+### 5d. Batch dispatch
 - If sequential simple tasks approved for batching:
   - Combine all task contracts into one subagent prompt
   - Instruct: "Complete these tasks in order. Commit after each."
   - One subagent handles the batch
 
-## Step 5: Handle Results
+## Step 6: Handle Results
 
 When a subagent completes:
 
-### 5a. Mark for review
+### 6a. Mark for review
 - Update task status to `review` (cascade update)
 
-### 5b. Dispatch reviewer
+### 6b. Dispatch reviewer
 - Spin up a reviewer subagent to check:
   - Did the implementation match the contract? (compliance)
   - Do tests pass?
   - Was anything built that wasn't requested? (scope creep)
   - Code quality check
 
-### 5c. Review outcome
+### 6c. Review outcome
 - **Pass:** Mark task `completed` (cascade update). Report to user.
 - **Fail (cycle 1):** Dispatch fix subagent with reviewer's feedback. Re-review after fix.
 - **Fail (cycle 2):** Mark task `blocked` with explanation. Inform user:
   > "`<task-id>` failed review twice. Issue: <summary>. What do you want to do?"
 
-### 5d. Max 2 review cycles
+### 6d. Max 2 review cycles
 After 2 failed reviews, the task is blocked and escalated to the user. Do not loop further.
 
-## Step 6: Continue
+## Step 7: Continue
 
 After task(s) complete, return to Step 1 — assess the updated state and present next options. The user drives the pace.
 

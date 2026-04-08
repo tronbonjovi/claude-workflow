@@ -13,5 +13,37 @@
     "milestones",
     "tasks",
     "project-management"
+  ],
+  "skills": [
+    {
+      "name": "build-roadmap",
+      "path": "skills/build-roadmap/SKILL.md",
+      "description": "Use when you have brainstorm drafts or informal plans and want to formalize them into a structured roadmap with milestones and AI-executable task contracts"
+    },
+    {
+      "name": "setup-roadmap",
+      "path": "skills/setup-roadmap/SKILL.md",
+      "description": "Use when starting a new project's workflow tracking or when a project needs the roadmap directory structure initialized"
+    },
+    {
+      "name": "update-roadmap",
+      "path": "skills/update-roadmap/SKILL.md",
+      "description": "Use when adding, removing, or modifying milestones and tasks in an existing roadmap"
+    },
+    {
+      "name": "update-task",
+      "path": "skills/update-task/SKILL.md",
+      "description": "Internal plumbing for cascade status updates — not user-invoked"
+    },
+    {
+      "name": "work-task",
+      "path": "skills/work-task/SKILL.md",
+      "description": "Use when the user wants to work on tasks, check project status, or continue development"
+    },
+    {
+      "name": "status",
+      "path": "skills/status/SKILL.md",
+      "description": "Use when the user wants a read-only overview of roadmap progress — prints a formatted terminal summary of milestones, tasks, and blockers"
+    }
   ]
 }
