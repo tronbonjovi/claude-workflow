@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# Detect plugin root from environment or script location
+PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
+
+# Check if current project has a roadmap
+HAS_ROADMAP="false"
+if [ -d ".claude/roadmap" ] && [ -f ".claude/roadmap/ROADMAP.md" ]; then
+  HAS_ROADMAP="true"
+fi
+
+# Build context message
+if [ "$HAS_ROADMAP" = "true" ]; then
+  MSG="This project has an active roadmap at .claude/roadmap/. Available workflow skills: /setup-roadmap, /build-roadmap, /update-roadmap, /update-task. Use /update-task to pick up or complete tasks."
+else
+  MSG="No roadmap detected. Use /setup-roadmap to initialize workflow tracking, or /build-roadmap after brainstorming."
+fi
+
+# Output as JSON for Claude context injection
+printf '{"context": "%s"}' "$MSG"
