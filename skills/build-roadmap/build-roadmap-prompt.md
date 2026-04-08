@@ -111,7 +111,7 @@ Once everything is confirmed, generate all files:
    - `.claude/roadmap/<milestone-name>/` for each milestone
 
 4. **Create individual task files:**
-   - Use `templates/task-standard.md` or `templates/task-complex.md` from this plugin's directory
+   - Use `templates/task-standard.md` or `templates/task-complex.md` from the plugin's root directory (the `claude-workflow/templates/` folder, not the skill's own folder)
    - Replace all `{{PLACEHOLDER}}` values with the confirmed content
    - Set `dependsOn` based on the dependencies identified in step 4
    - Set `phase` based on the phase plan
