@@ -78,16 +78,20 @@ Before dispatching, verify each approved task contract is complete enough for a 
 
 For each approved task file:
 
-1. Read the task contract file
-2. Check for the following required fields:
+1. **Check file exists:** Verify the task contract file exists at `.claude/roadmap/<milestone>/<task-id>.md`.
+   - If the file is missing: warn the user and skip the task:
+     > "`<task-id>` contract file not found at expected path. Skipping — you may need to recreate it with `/update-roadmap`."
+   - Continue with the next approved task if any remain. If no approved tasks remain, return to Step 2.
+2. Read the task contract file
+3. Check for the following required fields:
    - **`## Instructions` section** — must exist and contain substantive content (not empty or placeholder text)
    - **`## Tests` section** — must exist and contain substantive content
    - **`## Acceptance Criteria` section** — must exist and contain substantive content
    - **`filesTouch` frontmatter field** — must be populated with actual file paths (not an empty array `[]` or placeholder like `TBD`)
 
-3. **If all fields are present and substantive:** proceed to Step 5 (Dispatch).
+4. **If all fields are present and substantive:** proceed to Step 5 (Dispatch).
 
-4. **If any field is missing or placeholder:** present the gaps to the user:
+5. **If any field is missing or placeholder:** present the gaps to the user:
    > "`<task-id>` has incomplete contract fields:
    > - ❌ Missing: <list of missing/empty fields>
    >

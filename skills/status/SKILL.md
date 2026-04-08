@@ -17,11 +17,12 @@ Read the project's roadmap files and print a formatted terminal overview of prog
 
 ## Step 1: Read Roadmap Files
 
-Attempt to read these three files from the current project:
+Attempt to read these files from the current project:
 
 1. `.claude/roadmap/ROADMAP.md` — project name, vision, milestone list
 2. `.claude/roadmap/MILESTONE.md` — milestone statuses, descriptions, task membership
 3. `.claude/roadmap/TASK.md` — task statuses, phases, dependencies, complexity, parallel/batching notes
+4. `.claude/roadmap/ARCHIVE.md` *(optional)* — archived milestones and tasks. If this file does not exist, skip it — no error, no warning. Archived milestones are rendered separately in Step 3.
 
 ### Handle Empty States
 
@@ -142,6 +143,30 @@ A task's dependencies are "met" when every task ID listed in its Dependencies co
 
 If no tasks are ready (all are blocked, in-progress, or completed), omit this section.
 
+### Completed Milestones
+
+If ARCHIVE.md was read and contains archived milestones, show a compact summary section after all other content. Parse each milestone under `## Archived Milestones` to extract:
+
+- **Name** — from the `### <milestone-name>` heading
+- **Task count** — count the task rows under the matching milestone heading in `## Archived Tasks`
+- **Completion date** — use the `> Updated:` date from ARCHIVE.md (this is the archive modification date)
+
+Render as:
+
+```
+Completed
+---------
+orchestrator-hardening    2 tasks    2026-04-07
+status-dashboard          1 task     2026-04-07
+```
+
+Rules:
+- One line per archived milestone — name, task count, date
+- Use "task" (singular) when count is 1, "tasks" (plural) otherwise
+- No task-level detail — milestones only
+- Align columns with spaces for readability
+- If no archived milestones exist (ARCHIVE.md missing or empty), omit this section entirely
+
 ## Output Rules
 
 - Plain text only — no markdown formatting, no code fences in the actual output
@@ -153,7 +178,7 @@ If no tasks are ready (all are blocked, in-progress, or completed), omit this se
 
 ## Complete Example
 
-For a project with 2 milestones, 3 tasks total, 1 completed:
+For a project with 2 active milestones, 3 tasks total, 1 completed task, and 1 archived milestone:
 
 ```
 == CLAUDE-WORKFLOW ==
@@ -177,4 +202,8 @@ Milestone: status-dashboard — New skill for formatted terminal progress summar
 Ready to Work
 -------------
 - orchestrator-hardening-task002: Session context injection (standard)
+
+Completed
+---------
+initial-setup             3 tasks    2026-04-01
 ```
