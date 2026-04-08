@@ -48,24 +48,28 @@ Then present the full milestone list:
 >
 > Does this order make sense? Should any be reordered, combined, or split?"
 
-## Step 3: Break Down Tasks
+## Step 3: Break Down Tasks as Contracts
 
-For each confirmed milestone, propose tasks:
+For each confirmed milestone, propose tasks. Remember: these are **execution contracts for subagents**, not descriptions for humans.
 
 > "For the **<milestone-name>** milestone, I'm thinking these tasks:
 >
-> 1. **<task-title>** — <one-line description>. <standard/complex>.
-> 2. **<task-title>** — <one-line description>. <standard/complex>.
+> 1. **<task-title>** — <one-line description>. <standard/complex>. Touches: <files>.
+> 2. **<task-title>** — <one-line description>. <standard/complex>. Touches: <files>.
 > ...
 >
-> For each task, I'll write up the full contract (context, objective, acceptance criteria, scope). But first — does this task list cover what's needed for this milestone?"
+> Does this task list cover what's needed for this milestone?"
 
-After the user confirms the task list for a milestone, write out the full content for each task. For each task, present:
-- Context
-- Objective
-- Acceptance criteria (as a checklist)
-- Scope (in/out)
-- Technical approach and test plan (if complex)
+After the user confirms the task list for a milestone, write out the full contract for each task. For each task, present:
+- Context (why this task exists, what it builds on)
+- Objective (specific outcome)
+- Instructions (step-by-step: what to create, what to modify, what patterns to follow)
+- Tests (specific test cases — TDD style)
+- Acceptance criteria (verifiable checklist)
+- Scope (in/out boundaries)
+- Technical approach and risk notes (if complex)
+- Files to touch (explicit list)
+- Whether it's parallel-safe (can it run alongside other tasks in the same phase?)
 
 Confirm: "Does this task contract capture what you want? Anything to adjust?"
 
@@ -80,9 +84,10 @@ Once all milestones and tasks are confirmed, propose the phase/execution plan:
 > **Phase 1: <name>**
 > These need to happen first: <task list with brief rationale>
 >
-> **Phase 2: <name>** (parallel opportunities noted)
+> **Phase 2: <name>**
 > Once phase 1 is done: <task list>
-> <task-a> and <task-b> can run in parallel because <reason>
+> Parallel opportunity: <task-a> and <task-b> touch different files, no dependencies — can run simultaneously.
+> Batching opportunity: <task-c>, <task-d>, <task-e> are sequential and simple — one subagent could handle all three.
 >
 > ...
 >
@@ -111,14 +116,18 @@ Once everything is confirmed, generate all files:
    - `.claude/roadmap/<milestone-name>/` for each milestone
 
 4. **Create individual task files:**
-   - Use `templates/task-standard.md` or `templates/task-complex.md` from the plugin's root directory (the `claude-workflow/templates/` folder, not the skill's own folder)
+   - Use `templates/task-standard.md` or `templates/task-complex.md` from the plugin's root `templates/` directory (the `claude-workflow/templates/` folder, not the skill's own folder)
    - Replace all `{{PLACEHOLDER}}` values with the confirmed content
    - Set `dependsOn` based on the dependencies identified in step 4
    - Set `phase` based on the phase plan
+   - Set `parallelSafe` based on file overlap analysis
+   - Set `filesTouch` based on the files identified for each task
+   - **Naming convention:** `<milestone-name>-task<NNN>.md` — sequential numbering starting at 001
 
 5. **Update TASK.md:**
    - Create phase sections with tables
-   - Include parallelism notes
-   - Populate all task rows with: Task ID, Milestone, Status (pending), Dependencies
+   - Include columns: Task ID, Milestone, Status, Dependencies, Complexity, Parallel-Safe
+   - Include parallelism and batching notes
+   - Populate all task rows
 
-Generate all files, then report completion as described in the main SKILL.md.
+Report completion as described in the main SKILL.md.
