@@ -80,10 +80,11 @@ For each approved task file:
    - Continue with the next approved task if any remain. If no approved tasks remain, return to Step 2.
 2. Read the task contract file
 3. Verify the task contract meets the requirements defined in `/build-roadmap` (Instructions, Tests, AC, filesTouch — all substantive, no placeholders).
+4. **Validate `dependsOn` references:** Verify all task IDs in the `dependsOn` frontmatter field exist as rows in TASK.md. If any reference is missing or misspelled, warn the user: "`<task-id>` depends on `<missing-id>` which doesn't exist in TASK.md. Typo?" Let the user fix it, remove the dependency, or proceed anyway. This is a warning, not a hard block.
 
-4. **If all fields are present and substantive:** proceed to Step 5 (Dispatch).
+5. **If all fields are present and substantive:** proceed to Step 5 (Dispatch).
 
-5. **If any field is missing or placeholder:** tell the user which fields are missing and offer: proceed anyway, fill gaps now, or skip the task. Wait for their choice.
+6. **If any field is missing or placeholder:** tell the user which fields are missing and offer: proceed anyway, fill gaps now, or skip the task. Wait for their choice.
 
 ## Step 5: Dispatch Subagents
 
