@@ -42,15 +42,9 @@ Note: ROADMAP.md is synced by `/status`, not updated here.
 ### Add Tasks
 
 1. Confirm milestone the tasks belong to.
-2. For each new task, write a full AI-executable contract:
-   - Title, complexity (standard or complex)
-   - Context, objective, instructions, tests, acceptance criteria, scope
-   - Technical approach and risk notes (if complex)
-   - Files to touch, parallel safety assessment
-   - Dependencies on existing tasks
-   - Phase placement
+2. Write task contracts following the format defined in `/build-roadmap`.
 3. Create individual task files using the appropriate template from the plugin's root `templates/` directory.
-4. **Naming convention:** `<milestone-name>-task<NNN>.md` — continue numbering from the highest existing task number in that milestone.
+4. Follow the naming convention from `/build-roadmap`: `<milestone-name>-task<NNN>.md` — continue numbering from the highest existing task number in that milestone.
 5. Update MILESTONE.md: add task IDs to the milestone's task list.
 6. Update TASK.md: add task rows to the appropriate phase table with all columns (including Complexity and Parallel-Safe). If a new phase is needed, create it.
 7. Milestone status transitions to `pending` if it was `planned` (first tasks defined). ROADMAP.md is synced by `/status`.

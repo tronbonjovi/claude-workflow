@@ -81,11 +81,7 @@ For each approved task file:
      > "`<task-id>` contract file not found at expected path. Skipping — you may need to recreate it with `/update-roadmap`."
    - Continue with the next approved task if any remain. If no approved tasks remain, return to Step 2.
 2. Read the task contract file
-3. Check for the following required fields:
-   - **`## Instructions` section** — must exist and contain substantive content (not empty or placeholder text)
-   - **`## Tests` section** — must exist and contain substantive content
-   - **`## Acceptance Criteria` section** — must exist and contain substantive content
-   - **`filesTouch` frontmatter field** — must be populated with actual file paths (not an empty array `[]` or placeholder like `TBD`)
+3. Verify the task contract meets the requirements defined in `/build-roadmap` (Instructions, Tests, AC, filesTouch — all substantive, no placeholders).
 
 4. **If all fields are present and substantive:** proceed to Step 5 (Dispatch).
 
