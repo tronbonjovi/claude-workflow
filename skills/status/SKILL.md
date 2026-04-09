@@ -19,10 +19,11 @@ Read the project's roadmap files and print a formatted terminal overview of prog
 
 Attempt to read these files from the current project:
 
-1. `.claude/roadmap/ROADMAP.md` — project name, vision, milestone list
-2. `.claude/roadmap/MILESTONE.md` — milestone statuses, descriptions, task membership
-3. `.claude/roadmap/TASK.md` — task statuses, phases, dependencies, complexity, parallel/batching notes
+1. `.claude/roadmap/MILESTONE.md` — milestone statuses, descriptions, task membership (primary source of truth)
+2. `.claude/roadmap/TASK.md` — task statuses, phases, dependencies, complexity, parallel/batching notes
+3. `.claude/roadmap/ROADMAP.md` — project name, vision (read for header info only)
 4. `.claude/roadmap/ARCHIVE.md` *(optional)* — archived milestones and tasks. If this file does not exist, skip it — no error, no warning. Archived milestones are rendered separately in Step 3.
+5. `.claude/roadmap/drafts/` *(optional)* — count any `.md` files present for the drafts notice.
 
 ### Handle Empty States
 
@@ -34,7 +35,7 @@ No roadmap found. Run /setup-roadmap to get started.
 
 Stop here — do not render anything else.
 
-**Roadmap exists but no milestones defined** (MILESTONE.md has no milestone sections, or ROADMAP.md milestone table is empty):
+**Roadmap exists but no milestones defined** (MILESTONE.md has no milestone sections):
 
 ```
 Roadmap initialized but no milestones yet. Run /build-roadmap to define milestones.
@@ -99,7 +100,7 @@ Column alignment: pad columns with spaces so they line up visually. Milestone na
 
 ### Active Milestone Detail
 
-For each milestone that is NOT `completed` and NOT `cancelled`, show its tasks:
+For each milestone that is NOT `completed`, NOT `cancelled`, and NOT `planned`, show its tasks. If a milestone is `planned` (no tasks defined), show a single line: `No tasks defined yet — run /build-roadmap to break it down.`
 
 ```
 Milestone: <name> — <description>
@@ -166,6 +167,30 @@ Rules:
 - No task-level detail — milestones only
 - Align columns with spaces for readability
 - If no archived milestones exist (ARCHIVE.md missing or empty), omit this section entirely
+
+## Step 4: Sync ROADMAP.md
+
+After rendering the dashboard, silently sync ROADMAP.md to match current state. This is a side-effect — don't announce it unless something changed.
+
+1. Read `.claude/roadmap/ROADMAP.md`
+2. Update the **Active Milestones** table: populate from MILESTONE.md — all milestones with status `planned`, `pending`, `in_progress`, `blocked`, or `review`. Include Status and Progress columns.
+3. Update the **Completed History** table: all milestones with status `completed` — one row per milestone with name, completion date, and description. Cancelled milestones also go here with a "(cancelled)" note.
+4. Update the `updated:` date in ROADMAP.md frontmatter to today.
+5. Ensure the `milestones:` list in frontmatter matches all milestone names from MILESTONE.md + ARCHIVE.md.
+
+This is the **only** skill that writes to ROADMAP.md during normal operation. `build-roadmap` also writes ROADMAP.md during initial creation or when adding milestones, but ongoing sync is `/status`'s responsibility. The cascade (`update-task`) does not touch it.
+
+## Step 5: Drafts Notice
+
+If `.claude/roadmap/drafts/` contains any `.md` files, append to the dashboard output:
+
+```
+Drafts
+------
+N draft(s) waiting to be formalized. Run /build-roadmap to review.
+```
+
+If no drafts exist, omit this section.
 
 ## Output Rules
 

@@ -48,6 +48,20 @@ Then present the full milestone list:
 >
 > Does this order make sense? Should any be reordered, combined, or split?"
 
+### Checkpoint: Milestones Complete
+
+After the milestone list is confirmed, present a checkpoint:
+
+> "Milestones are confirmed. I can:
+> 1. **Write milestones to the roadmap now** and stop here — come back later to define tasks.
+> 2. **Continue to task breakdown** for these milestones.
+>
+> Which do you prefer?"
+
+**If stopping:** Write milestones to ROADMAP.md (Active Milestones table) and MILESTONE.md with status `planned`. No task files, no TASK.md entries. The `planned` status signals "on the roadmap, no tasks defined yet." Report what was written and stop.
+
+**If continuing:** Proceed to Step 3.
+
 ## Step 3: Break Down Tasks as Contracts
 
 For each confirmed milestone, propose tasks. Remember: these are **execution contracts for subagents**, not descriptions for humans.
@@ -84,7 +98,15 @@ For all tasks, also specify:
 
 Confirm: "Does this task contract capture what you want? Anything to adjust?"
 
-Move to the next milestone's tasks after confirmation.
+### Checkpoint: Between Milestones
+
+After completing the task breakdown for a milestone, if there are more milestones to break down:
+
+> "Tasks defined for **<milestone-name>**. Move on to **<next-milestone>** task breakdown, or stop here and come back later?"
+
+**If stopping:** Write everything confirmed so far — milestones with tasks get status `pending`, remaining milestones stay `planned`. Report what was written and stop.
+
+**If continuing:** Move to the next milestone's tasks.
 
 ## Step 4: Plan Sequencing
 
@@ -118,10 +140,11 @@ Once everything is confirmed, generate all files:
    - Fill in vision and goals from the conversation
    - Set `sources:` to list all draft files that were read
    - Add all milestone names to `milestones:` list
-   - Populate the milestone overview table
+   - Populate the Active Milestones table (milestones with tasks get status `pending`; milestones without tasks get status `planned`)
 
 2. **Update MILESTONE.md:**
-   - Add a section for each milestone with: status (pending), description, directory, task list, created date, status_override: null
+   - Add a section for each milestone with: description, directory, task list, created date, status_override: null
+   - Status: `pending` if tasks were defined, `planned` if no tasks yet
 
 3. **Create milestone directories:**
    - `.claude/roadmap/<milestone-name>/` for each milestone

@@ -18,7 +18,12 @@ milestones: []
 
 {{GOALS}}
 
-## Milestone Overview
+## Active Milestones
 
 | Milestone | Status | Progress | Description |
 |-----------|--------|----------|-------------|
+
+## Completed History
+
+| Milestone | Completed | Description |
+|-----------|-----------|-------------|

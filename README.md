@@ -6,18 +6,19 @@ A file-based development workflow plugin for Claude Code. Turns brainstorming se
 
 | Skill | Purpose |
 |-------|---------|
+| **draft** | Quick-capture an idea to `drafts/` — no milestones, no tasks, just a seed |
 | **adopt-project** | Onboard an existing project: scan repo, find planning artifacts, bootstrap workflow |
 | **setup-roadmap** | Initialize the workflow structure for a new project |
 | **build-roadmap** | Transform brainstorm drafts into a formal roadmap with milestones and task contracts |
 | **update-roadmap** | Add/remove/modify milestones and tasks after direction changes |
 | **work-task** | Orchestrator: reads the task graph, presents status, dispatches subagents on your approval |
-| **status** | Read-only dashboard: milestone progress, blocked items, next-up summary |
+| **status** | Dashboard + sync: milestone progress, blocked items, next-up, and ROADMAP.md sync |
 
 Internal (not user-invoked):
 
 | Skill | Purpose |
 |-------|---------|
-| **update-task** | Cascade status updates through task → TASK.md → MILESTONE.md → ROADMAP.md |
+| **update-task** | Cascade status updates through task → TASK.md → MILESTONE.md |
 
 ## How It Works
 
@@ -65,7 +66,7 @@ The orchestrator (`work-task`) reads the task graph, understands phase ordering,
 
 **Tasks:** `pending` → `in_progress` → `review` → `completed` (also: `blocked`, `cancelled`)
 
-**Milestones:** Derived from tasks by default. All pending → pending, any in_progress → in_progress, all completed → review (awaits user confirmation), then completed. Manual override available via `status_override`.
+**Milestones:** `planned` (on roadmap, no tasks yet) → `pending` (tasks defined) → derived from task statuses. Manual override available via `status_override`.
 
 **Roadmap:** `active`, `paused`, `completed`, `archived`
 
@@ -84,20 +85,16 @@ claude plugin install claude-workflow
 
 ## Workflow
 
-1. **`/adopt-project`** — onboard an existing project (or brainstorm freely for new ones)
-2. **`/build-roadmap`** — formalize drafts into structured roadmap with task contracts
-3. **`/work-task`** — see status and dispatch subagents for task execution
-4. **`/status`** — quick read-only progress check
-5. **`/update-roadmap`** — adjust after new brainstorming or direction changes
+1. **`/draft`** — capture ideas as they come, no ceremony
+2. **`/adopt-project`** — onboard an existing project (or brainstorm freely for new ones)
+3. **`/build-roadmap`** — formalize drafts into structured roadmap (additive by default, with checkpoints)
+4. **`/work-task`** — see status and dispatch subagents for task execution
+5. **`/status`** — progress dashboard + ROADMAP.md sync
+6. **`/update-roadmap`** — adjust after new brainstorming or direction changes
 
 ## Compatibility
 
 Designed for integration with [agent-cc](https://github.com/tronbonjovi/agent-cc). Task files use YAML frontmatter compatible with agent-cc's task parsing and Kanban board. Status updates cascade across all index files, so agent-cc's file watcher sees changes in real-time.
-
-## Known Issues
-
-- Milestone `review` state is skipped — milestones go directly from `in_progress` to `completed` instead of pausing for user confirmation
-- Re-review cycle not enforced after subagent fixes
 
 ## License
 

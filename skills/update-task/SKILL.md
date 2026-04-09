@@ -24,6 +24,7 @@ When a task status changes, update ALL of these files in order:
 ### 3. MILESTONE.md
 - Find the milestone section for this task
 - Recalculate derived status using these rules:
+  - Milestone has no tasks (status `planned`) → keep `planned`, no derivation needed
   - All tasks `pending` → milestone `pending`
   - Any task `in_progress` → milestone `in_progress`
   - Any task `blocked` AND no tasks `in_progress` → milestone `blocked`
@@ -62,13 +63,12 @@ Structure: `# Archive` > `> Updated: YYYY-MM-DD` > `## Archived Milestones` (eac
 
 Key rules:
 - Tasks grouped by milestone name, not by phase
-- ROADMAP.md milestone row stays (table of contents)
 - Milestone directory and task files on disk are NOT moved or deleted
+- ROADMAP.md is synced by `/status`, not by the archive step
 
-### 5. ROADMAP.md
-- Find the milestone row in the overview table
-- Update Status column to match milestone's current status
-- Update Progress column (count completed+cancelled / total tasks)
+### Note: ROADMAP.md
+
+ROADMAP.md is **not** updated by the cascade. It is synced by `/status` on demand. This keeps the execution loop lean — three file writes per status change instead of four.
 
 ## Status Transitions
 
@@ -76,6 +76,7 @@ Valid transitions:
 
 | From | To |
 |------|-----|
+| `planned` | `pending` (when tasks are first defined), `cancelled` |
 | `pending` | `in_progress`, `cancelled` |
 | `in_progress` | `blocked`, `review`, `cancelled` |
 | `blocked` | `in_progress`, `cancelled` |

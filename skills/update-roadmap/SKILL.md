@@ -34,11 +34,10 @@ Parse the user's request and determine which operation(s) are needed:
    - Description
    - What it achieves
 2. Create the milestone directory: `.claude/roadmap/<milestone-name>/`
-3. Add milestone section to MILESTONE.md (status: pending, tasks: empty)
-4. Add milestone to ROADMAP.md:
-   - Append to `milestones:` list in frontmatter
-   - Add row to milestone overview table
-5. Ask: "Want to define tasks for this milestone now?" If yes, proceed to Add Tasks.
+3. Add milestone section to MILESTONE.md (status: `planned` — no tasks yet, tasks: empty)
+4. Ask: "Want to define tasks for this milestone now?" If yes, proceed to Add Tasks.
+
+Note: ROADMAP.md is synced by `/status`, not updated here.
 
 ### Add Tasks
 
@@ -54,7 +53,7 @@ Parse the user's request and determine which operation(s) are needed:
 4. **Naming convention:** `<milestone-name>-task<NNN>.md` — continue numbering from the highest existing task number in that milestone.
 5. Update MILESTONE.md: add task IDs to the milestone's task list.
 6. Update TASK.md: add task rows to the appropriate phase table with all columns (including Complexity and Parallel-Safe). If a new phase is needed, create it.
-7. Update ROADMAP.md: update progress column for the affected milestone.
+7. Milestone status transitions to `pending` if it was `planned` (first tasks defined). ROADMAP.md is synced by `/status`.
 
 ### Cancel Milestone
 
@@ -62,7 +61,7 @@ Parse the user's request and determine which operation(s) are needed:
 2. Set all task files in the milestone directory to `status: cancelled` (using update-task cascade logic).
 3. Update MILESTONE.md: set milestone status to `cancelled`.
 4. Update TASK.md: set all task rows for this milestone to `cancelled`.
-5. Update ROADMAP.md: update milestone status and progress.
+5. ROADMAP.md is synced by `/status`, not updated here.
 
 ### Cancel Tasks
 
@@ -91,31 +90,26 @@ Moves a previously cancelled milestone from ARCHIVE.md back into the active inde
    - Set all task statuses to `pending`
    - If the target phase section doesn't exist in TASK.md, create it with the standard table header
 5. Update individual task files on disk: set `status: pending` and `updated:` to today in frontmatter
-6. Update ROADMAP.md:
-   - Set milestone status to `pending`
-   - Update progress column to reflect all tasks as `pending`
-7. Remove the reactivated entries from ARCHIVE.md:
+6. Remove the reactivated entries from ARCHIVE.md:
    - Remove the milestone section from `## Archived Milestones`
    - Remove the milestone's task group from `## Archived Tasks`
    - If `## Archived Milestones` or `## Archived Tasks` has no remaining content, remove those headings
    - If ARCHIVE.md is now empty (only the `# Archive` header and date remain), delete the file
    - Otherwise, update the `> Updated:` date
-8. Inform user: "Milestone **<name>** reactivated with <N> tasks set to `pending`."
+7. Inform user: "Milestone **<name>** reactivated with <N> tasks set to `pending`." ROADMAP.md is synced by `/status`.
 
 ### Override Milestone Status
 
 1. Confirm the milestone and desired status override.
 2. Set `status_override` in MILESTONE.md to the requested status.
-3. Update ROADMAP.md milestone overview to reflect the override.
-4. Inform user: "Milestone **<name>** status overridden to **<status>**. Derived status would be **<derived>**."
+3. Inform user: "Milestone **<name>** status overridden to **<status>**. Derived status would be **<derived>**." ROADMAP.md is synced by `/status`.
 
 ## Consistency Guarantee
 
 After every operation, verify:
 - Every task file in a milestone directory is listed in MILESTONE.md's task list
 - Every task listed in MILESTONE.md appears in TASK.md
-- ROADMAP.md milestone list matches MILESTONE.md sections
-- Progress counts in ROADMAP.md match actual task statuses
+- ROADMAP.md milestone list matches MILESTONE.md sections (synced by `/status`, not enforced here)
 - Task files follow naming convention: `<milestone-name>-task<NNN>.md`
 
 - No milestone appears in both MILESTONE.md and ARCHIVE.md simultaneously
