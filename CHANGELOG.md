@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-04-08
+
+### Added
+- `draft` skill — quick-capture ideas to `.claude/roadmap/drafts/` with minimal ceremony. No milestones, no tasks, just seeds for later.
+- ROADMAP.md sync in `status` skill — `/status` now syncs ROADMAP.md Active Milestones and Completed History tables from MILESTONE.md state as a side-effect
+- Drafts notice in `status` dashboard — shows count of pending drafts
+- `planned` milestone status — milestones on the roadmap that don't have task breakdowns yet. `work-task` ignores them.
+- Session-start hook now reports draft count and includes `/draft` in available skills
+
+### Changed
+- **ROADMAP.md removed from execution hot path** — `work-task` no longer reads ROADMAP.md (uses MILESTONE.md to find active milestone). `update-task` cascade no longer writes to ROADMAP.md (3 files instead of 4). ROADMAP.md is now synced only by `/status` on demand.
+- ROADMAP.md template split into two sections: Active Milestones (for current work) and Completed History (project timeline)
+- `build-roadmap` defaults to additive mode when milestones already exist — append new milestones instead of rebuilding
+- `build-roadmap` adds checkpoints: stop after milestones (before task breakdown), stop between milestone task breakdowns, resume milestones that have no tasks yet
+- `update-roadmap` uses `planned` status for new milestones without tasks
+- `update-roadmap` drops ROADMAP.md progress consistency check (now `/status`'s responsibility)
+
 ## [0.4.0] - 2026-04-07
 
 ### Added

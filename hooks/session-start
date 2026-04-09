@@ -11,9 +11,18 @@ fi
 
 # Build context message
 if [ "$HAS_ROADMAP" = "true" ]; then
-  MSG="This project has an active roadmap at .claude/roadmap/. Available workflow skills: /adopt-project, /setup-roadmap, /build-roadmap, /update-roadmap, /work-task, /status. Use /work-task to pick up or continue development, or /status for a quick overview."
+  # Count drafts
+  DRAFT_COUNT=0
+  if [ -d ".claude/roadmap/drafts" ]; then
+    DRAFT_COUNT=$(find .claude/roadmap/drafts -maxdepth 1 -name "*.md" 2>/dev/null | wc -l | tr -d ' \n')
+  fi
+  DRAFT_MSG=""
+  if [ "$DRAFT_COUNT" -gt 0 ]; then
+    DRAFT_MSG=" ($DRAFT_COUNT draft(s) in pipeline)"
+  fi
+  MSG="This project has an active roadmap at .claude/roadmap/. Available workflow skills: /draft, /adopt-project, /setup-roadmap, /build-roadmap, /update-roadmap, /work-task, /status. Use /work-task to pick up or continue development, /status for a quick overview, or /draft to capture an idea.${DRAFT_MSG}"
 else
-  MSG="No roadmap detected. Use /adopt-project to onboard an existing project, or /setup-roadmap to start fresh."
+  MSG="No roadmap detected. Use /adopt-project to onboard an existing project, /setup-roadmap to start fresh, or /draft to capture a quick idea."
 fi
 
 # Output as JSON for Claude context injection

@@ -15,22 +15,22 @@ description: Use when the user wants to work on tasks, check project status, or 
 
 ## Step 1: Assess State
 
-Scope reads to the active milestone only — don't load the entire roadmap into context.
+Scope reads to the active milestone only — don't load the entire roadmap into context. **Do not read ROADMAP.md** — it is a planning/history document, not needed for execution.
 
 ### Guards
 
 1. If `.claude/roadmap/` directory doesn't exist → stop and say: **"No roadmap found. Run `/setup-roadmap` to get started."**
-2. Read `.claude/roadmap/ROADMAP.md` — look at the milestone overview table only.
-   - If the milestone table is empty (no milestone rows) → stop and say: **"Roadmap initialized but empty. Run `/build-roadmap` to define milestones."**
+2. Read `.claude/roadmap/MILESTONE.md`.
+   - If no milestone sections exist → stop and say: **"Roadmap initialized but empty. Run `/build-roadmap` to define milestones."**
 
 ### Identify Active Milestone
 
-3. From the ROADMAP.md milestone table, find the **first milestone** with status `in_progress`. If none are in-progress, use the **first milestone** with status `pending`. This is the **active milestone**.
-4. Note the active milestone's ID (e.g., `milestone-01`).
+3. From MILESTONE.md, find the **first milestone section** with status `in_progress`. If none are in-progress, use the **first milestone section** with status `pending`. Skip milestones with status `planned` (no tasks yet), `completed`, or `cancelled`. This is the **active milestone**.
+4. Note the active milestone's name.
 
 ### Scoped Reads
 
-5. Read `.claude/roadmap/MILESTONE.md` — read **only the active milestone's section**. Skip all other milestone sections (especially completed/cancelled ones).
+5. From MILESTONE.md, read **only the active milestone's section**. Skip all other milestone sections.
 6. Read `.claude/roadmap/TASK.md` — read **only task rows belonging to the active milestone**. Skip rows for other milestones.
 
 ### Determine
@@ -96,7 +96,7 @@ For each approved task file:
 For each approved task:
 
 ### 5a. Pre-dispatch
-- Mark task `in_progress` (cascade update to TASK.md, MILESTONE.md, ROADMAP.md)
+- Mark task `in_progress` (cascade update to TASK.md, MILESTONE.md)
 - Read the full task contract file
 
 ### 5b. Dispatch

@@ -1,6 +1,6 @@
 {
   "name": "claude-workflow",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "type": "module",
   "description": "File-based development workflow system for Claude Code — roadmaps, milestones, and task contracts",
   "author": "tronbonjovi",
@@ -15,6 +15,11 @@
     "project-management"
   ],
   "skills": [
+    {
+      "name": "draft",
+      "path": "skills/draft/SKILL.md",
+      "description": "Use when you have a quick idea, thought, or rough plan to capture — saves it to .claude/roadmap/drafts/ with minimal ceremony"
+    },
     {
       "name": "build-roadmap",
       "path": "skills/build-roadmap/SKILL.md",

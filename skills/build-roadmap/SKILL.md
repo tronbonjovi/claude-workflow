@@ -23,7 +23,11 @@ Transform informal brainstorming outputs into a formal, structured roadmap with 
    - `.claude/roadmap/drafts/*.md` — brainstorm drafts
    - `docs/superpowers/specs/*.md` — design specs
 3. If no drafts or specs found: ask the user what they'd like to build the roadmap from. They may want to describe it in conversation, paste notes, or point to other files.
-4. Check if ROADMAP.md already has milestones defined. If so: warn that this will rebuild the roadmap. Ask if they want to start fresh or add to the existing roadmap. If adding, read existing state first.
+4. Check if ROADMAP.md already has milestones defined:
+   - **If milestones exist:** default to additive mode. Ask: "Add new milestones to the existing roadmap, or start fresh?" If additive, read existing milestones from MILESTONE.md to avoid name conflicts.
+   - **If no milestones:** proceed with fresh roadmap creation.
+5. If multiple drafts exist, let the user choose: "I see N drafts. Which ones should we work with this session?" List them. Accept "all" or specific selections.
+6. Check if MILESTONE.md has milestones with no task breakdown (status `planned`). If so, offer to resume: "**<name>** has no task breakdown yet. Want to define tasks for it?"
 
 ## Process
 
