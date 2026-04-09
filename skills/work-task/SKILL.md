@@ -146,6 +146,13 @@ When a subagent completes:
 ### 6d. Max 2 review cycles
 After 2 failed reviews, the task is blocked and escalated to the user. Do not loop further.
 
+### 6e. Milestone completion check
+After a task is marked `completed`, check if the active milestone's derived status is now `review` (all tasks are completed or cancelled). If so:
+
+- Prompt the user: **"All tasks in `<milestone>` are done. Mark milestone as completed?"**
+- **On approval:** Update milestone status to `completed` via `/update-task` cascade (triggers archival).
+- **On rejection:** Leave milestone as `review` — the user may want to add more tasks or re-examine results.
+
 ## Step 7: Continue
 
 After task(s) complete, return to Step 1 — assess the updated state and present next options. The user drives the pace.
