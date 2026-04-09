@@ -11,21 +11,23 @@ Transform informal brainstorming outputs into a formal, structured roadmap with 
 
 - After brainstorming sessions that produced rough plans
 - When draft files exist in `.claude/roadmap/drafts/`
-- When spec files exist in `docs/superpowers/specs/` that should inform the roadmap
+- When spec files exist in `docs/superpowers/specs/` or plan files in `docs/superpowers/plans/` that should inform the roadmap
 - When the user says "let's turn this into a roadmap" or "formalize the plan"
 
 ## Pre-Check
 
 1. Verify `.claude/roadmap/` exists. If not: "No roadmap found. Run `/setup-roadmap` to get started."
-2. Scan for input sources:
+2. Scan for input sources (skip any directory that doesn't exist — no error, no warning):
    - `.claude/roadmap/drafts/*.md` — brainstorm drafts
    - `docs/superpowers/specs/*.md` — design specs
-3. If no drafts or specs found: ask the user what they'd like to build the roadmap from. They may want to describe it in conversation, paste notes, or point to other files.
-4. Check if ROADMAP.md already has milestones defined:
+   - `docs/superpowers/plans/*.md` — implementation plans
+3. Read ROADMAP.md frontmatter `sources:` list. Filter out any file whose path already appears in that list — those have already been formalized.
+4. If no unconsumed sources found: ask the user what they'd like to build the roadmap from. They may want to describe it in conversation, paste notes, or point to other files.
+5. Check if ROADMAP.md already has milestones defined:
    - **If milestones exist:** default to additive mode. Ask: "Add new milestones to the existing roadmap, or start fresh?" If additive, read existing milestones from MILESTONE.md to avoid name conflicts.
    - **If no milestones:** proceed with fresh roadmap creation.
-5. If multiple drafts exist, let the user choose: "I see N drafts. Which ones should we work with this session?" List them. Accept "all" or specific selections.
-6. Check if MILESTONE.md has milestones with no task breakdown (status `planned`). If so, offer to resume: "**<name>** has no task breakdown yet. Want to define tasks for it?"
+6. If multiple sources exist, present them grouped by origin (Drafts, Specs, Plans) so the user sees where each came from. Let the user choose: "I found N sources. Which ones should we work with this session?" Accept "all" or specific selections.
+7. Check if MILESTONE.md has milestones with no task breakdown (status `planned`). If so, offer to resume: "**<name>** has no task breakdown yet. Want to define tasks for it?"
 
 ## Step 1: Read and Summarize
 
@@ -84,7 +86,7 @@ Adjust based on feedback.
 
 Once everything is confirmed, generate all files at once:
 
-1. **ROADMAP.md** — vision, goals, `sources:` list, `milestones:` list, Active Milestones table (`pending` if tasks defined, `planned` if not).
+1. **ROADMAP.md** — vision, goals, `sources:` list, `milestones:` list, Active Milestones table (`pending` if tasks defined, `planned` if not). **Source tracking:** append every consumed input file path to the `sources:` list in frontmatter. This prevents re-presenting files that have already been formalized in future runs.
 2. **MILESTONE.md** — section per milestone: description, directory, task list, created date, status_override: null.
 3. **Milestone directories** — `.claude/roadmap/<milestone-name>/` for each.
 4. **Task files** — use `templates/task-standard.md` or `templates/task-complex.md` from the plugin's root `templates/` directory. Replace all `{{PLACEHOLDER}}` values. Set `dependsOn`, `phase`, `parallelSafe`, `filesTouch`.
